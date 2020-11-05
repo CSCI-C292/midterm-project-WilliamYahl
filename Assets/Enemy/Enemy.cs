@@ -19,6 +19,11 @@ public class Enemy : MonoBehaviour
 
 
     // Update is called once per frame
+    private void Start()
+    {
+        relativeTargetLocation = _target.location - GetComponent<Rigidbody2D>().position;
+        leap();
+    }
     void Update()
     {
         relativeTargetLocation = _target.location - GetComponent<Rigidbody2D>().position;
@@ -36,7 +41,7 @@ public class Enemy : MonoBehaviour
 
         //print(_target.location + " " +  GetComponent<Rigidbody2D>().position );
         //Debug.Log(relativeTargetLocation + " " + -Math.Sign(relativeTargetLocation.x));
-        RaycastHit2D hit = Physics2D.Raycast(GetComponent<Rigidbody2D>().position, relativeTargetLocation, 1.5f * _aggroRange);
+        RaycastHit2D hit = Physics2D.Raycast(GetComponent<Rigidbody2D>().position, relativeTargetLocation);
         if(hit)
         {
             if(hit.collider.name == _target.targetName && hit.distance > _aggroRange )
@@ -80,7 +85,7 @@ public class Enemy : MonoBehaviour
 
     private void leap()
     {
-        if (canLeap && GetComponent<Rigidbody2D>().velocity.y == 0)
+        if (canLeap /*&& GetComponent<Rigidbody2D>().velocity.y == 0*/)
         {
             Invoke("resetLeap", _leapCooldown);
             GetComponent<Rigidbody2D>().velocity = new Vector2(-_leapForward * Math.Sign(-relativeTargetLocation.x), _leapUp);

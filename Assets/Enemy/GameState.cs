@@ -33,8 +33,14 @@ public class GameState : MonoBehaviour
 
     public void SpawnEnemy()
     {
-        float randX = Random.Range(-5f, 5f);
-        Instantiate(_spawnee, new Vector3(randX, 6, -1), Quaternion.identity);
+        float randX = Random.Range(0,2);
+        if(randX == 0)
+        {
+            Instantiate(_spawnee, new Vector3(10, -1.5f, -1), Quaternion.identity);
+        }else
+        {
+            Instantiate(_spawnee, new Vector3(-10, -1.5f, -1), Quaternion.identity);
+        }
     }
 
     public void IncreaseScore()

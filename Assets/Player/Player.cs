@@ -75,13 +75,14 @@ public class Player : MonoBehaviour
         if(!invincibility && collision.collider.name != "Tilemap")
         {
             invincibility = true;
-            Invoke("invincibilityTimer", .1f);
+            Invoke("invincibilityTimer", .2f);
             
             _hp--;
             _hpBar.GetComponent<Text>().text = "HP: " + _hp;
             if (_hp == 0 || collision.collider.name == "Pits")
             {
                 GameState.instance.GameOver();
+                _hpBar.SetActive(false);
                 Destroy(gameObject);
             }
         }

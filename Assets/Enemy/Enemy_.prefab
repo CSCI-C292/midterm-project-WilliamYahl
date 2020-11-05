@@ -126,7 +126,7 @@ MonoBehaviour:
   _speed: 0.2
   _leapForward: 15
   _leapUp: 4
-  _leapCooldown: 2
+  _leapCooldown: 1
   _aggroRange: 3
   _target: {fileID: 11400000, guid: dd8cdf478e0eec243a10d5bf3d86d359, type: 2}
 --- !u!50 &585395250290234952
