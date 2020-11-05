@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -13,10 +14,17 @@ public class Player : MonoBehaviour
 
     [SerializeField] Aggro _myAggro;
 
+    [SerializeField] GameObject _hpBar;
+    [SerializeField] int _hp;
+
+    private bool invincibility = false;
+
     private void Awake()
     {
         _myAggro.targetName = name;
         _myAggro.location = GetComponent<Rigidbody2D>().position;
+
+        _hpBar.GetComponent<Text>().text = "HP: " + _hp;
     }
 
     // Update is called once per frame Time.deltaTime *
@@ -33,7 +41,7 @@ public class Player : MonoBehaviour
             transform.Rotate(new Vector3(0, 1, 0), 180f);
         }
 
-        Vector2 movementVector =  new Vector2( _speed * Input.GetAxis("Horizontal"), 0);
+        Vector2 movementVector =  new Vector2(_speed * Input.GetAxis("Horizontal"), 0);
         GetComponent<Rigidbody2D>().MovePosition(GetComponent<Rigidbody2D>().position + movementVector);
         //transform.position += new Vector3(Time.deltaTime * speed * Input.GetAxis("Horizontal"), 0, 0);
 
@@ -53,6 +61,31 @@ public class Player : MonoBehaviour
 
         _myAggro.location = GetComponent<Rigidbody2D>().position;
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.name == "Pits")
+        {
+            GameState.instance.GameOver();
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(!invincibility && collision.collider.name != "Tilemap")
+        {
+            invincibility = true;
+            Invoke("invincibilityTimer", .1f);
+            
+            _hp--;
+            _hpBar.GetComponent<Text>().text = "HP: " + _hp;
+            if (_hp == 0 || collision.collider.name == "Pits")
+            {
+                GameState.instance.GameOver();
+                Destroy(gameObject);
+            }
+        }
+    }
 
     void startIdle()
     {
@@ -64,5 +97,10 @@ public class Player : MonoBehaviour
     {
         transform.Find("Swing").gameObject.SetActive(true);
         GetComponent<SpriteRenderer>().sprite = _attacking;
+    }
+
+    void invincibilityTimer()
+    {
+        invincibility = false;
     }
 }
